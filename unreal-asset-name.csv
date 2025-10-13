@@ -1,0 +1,136 @@
+Name,Prefix,Suffix,Example
+AI Controller,AIC_,,AIC_Example
+Ability Set,AS_,,AS_Example
+Aim Offset,AO_,,AO_Example
+Aim Offset 1D,AO_,,AO_Example
+Animated Vector Field,VFA_,,VFA_Example
+Animation Blueprint,ABP_,,ABP_Example
+Animation Composite,AC_,,AC_Example
+Animation Montage,AM_,,AM_Example
+Animation Notify,AN_,,AN_Example
+Animation Sequence,AS_,,AS_Example
+Asset Placement Palette,APP_,,APP_Example
+Behavior Tree,BT_,,BT_Example
+Blackboard,BB_,,BB_Example
+Blend Space,BS_,,BS_Example
+Blend Space 1D,BS_,,BS_Example
+Blink Media Player,BMP_,,BMP_Example
+Blueprint,BP_,,BP_Example
+Blueprint Component,BP_,_AC,BP_Example_AC
+Blueprint Function Library,BPFL_,,BPFL_Example
+Blueprint Interface,BPI_,,BPI_Example
+Blueprint Macro Library,BPML_,,BPML_Example
+Camera Anim,CA_,,CA_Example
+Chooser Table,CHT_,,CHT_Example
+Color Curve,Curve_,_Color,Curve_Example_Color
+Cube Render Target,RTC_,,RTC_Example
+Curve Atlas,Curve_,_Atlas,Curve_Example_Atlas
+Curve Table,Curve_,_Table,Curve_Example_Table
+Data Asset,DA_,,DA_Weapon_Example
+Data Registry,DR_,,DR_Example
+Data Table,DT_,,DT_Example
+Dataprep Asset,DPA_,,DPA_Example
+Decorator,BTD_,,BTD_Example
+Destructable Mesh,DM_,,DM_Example
+Dialogue Voice,DV_,,DV_Example
+Dialogue Wave,DW_,,DW_Example
+Editor Utility Widget Blueprint,EUW_,,EUW_Example
+Enumerator,E,,EExample
+Environment Query,EQS_,,EQS_Example
+Environment Query Context,EQS_,_Context,EQS_Example_Context
+File Media Source,FMS_,,FMS_Example
+Float Curve,Curve_,_Float,Curve_Example_Float
+Foliage Type,FT_,,FT_Example
+Font,Font_,,Font_Example
+Force Feedback Effect,FFE_,,FFE_Example
+Game Phase Abilities,Phase_,,Phase_Example
+Gameplay Abilities,GA_,,GA_Example
+Gameplay Cue Notifies,GCN_,,GCN_Example
+Gameplay Effects,GE_,,GE_Example
+Input Action,IA_,,IA_Example
+Input Mapping Context,IMC_,,IMC_Example
+Landscape Grass Type,LG_,,LG_Example
+Landscape Layer,LL_,,LL_Example
+Latent Gameplay Cue Notifies,GCNL_,,GCNL_Example
+Level,L_,,L_Example
+Level (World Partition),L_,_WP,L_Example_WP
+Level Instance,LI_,,LI_Example
+Level Sequence,LS_,,LS_Example
+Material,M_,,M_Example
+Material (Decal),M_,_Decal,M_Example_Decal
+Material (Light Function),M_,_LF,M_Example_LF
+Material (Post Process),M_,_PP,M_Example_PP
+Material (User Interface),M_,_UI,M_Example_UI
+Material (Volume),M_,_Vol,M_Example_Vol
+Material Function,MF_,,MF_Example
+Material Instance,MI_,,MI_Example
+Material Instance (Decal),MI_,_Decal,Example
+Material Instance (Light Function),MI_,_LF,MI_Example_LF
+Material Instance (Post Process),MI_,_PP,MI_Example_PP
+Material Instance (User Interface),MI_,_UI,MI_Example_UI
+Material Instance (Volume),MI_,_Vol,MI_Example_Vol
+Material Parameter Collection,MPC_,,MPC_Example
+Media Player,MP_,,MP_Example
+Media Sound Wave,MSW_,,MSW_Example
+Media Texture,MT_,,MT_Example
+Morph Target,MT_,,MT_Example
+Niagara Dynamic Input Script,NDIS_,,NDIS_Example
+Niagara Effect Type,NET_,,NET_Example
+Niagara Emitter,NE_,,NE_Example
+Niagara Function Script,NFS_,,NFS_Example
+Niagara Module Script,NMS_,,NMS_Example
+Niagara Parameter Collection,NPC_,,NPC_Example
+Niagara Parameter Collection Instance,NPCI_,,NPCI_Example
+Niagara System,NS_,,NS_Example
+Object Library,OL_,,OL_Example
+Paper Flipbook,PFB_,,PFB_Example
+Physical Material,PM_,,PM_Example
+Physics Asset,PHYS_,,PHYS_Example
+Procedural Content Generation,PCG_,,PCG_Example
+Render Target,RT_,,RT_Example
+Reverb Effect,Reverb_,,Reverb_Example
+Rig,Rig_,,Rig_Example
+Service,BTS_,,BTS_Example
+Skeletal Mesh,SKM_,,SKM_Example
+Skeleton,SK_,,SK_Example
+Slate Brush,SB_,,SB_Example
+Slate Widget Style,SWS_,,SWS_Example
+Sound Attenuation,S_,_ATT,S_Example_ATT
+Sound Class,SC_,,SC_Example
+Sound Concurrency,S_,_CC,S_Example_CC
+Sound Cue,S_,_Cue,S_Example_Cue
+Sound Mix,S_,_Mix,S_Example_Mix
+Sound Wave,S_,,S_Example
+Soundscape Color,SSC_,,SSC_Example
+Soundscape Palette,SSP_,,SSP_Example
+Sprite,SPR_,,SPR_Example
+Sprite Atlas Group,SPRG_,,SPRG_Example
+Static Mesh,SM_,,SM_Example
+Static Vector Field,VF_,,VF_Example
+Structure,S,,SExample
+Substance Graph Instance,SGI_,,SGI_Example
+Substance Instance Factor,SIF_,,SIF_Example
+Subsurface Profile,SP_,,SP_Example
+Task,BTT_,,BTT_Example
+Texture,T_,,T_Example
+Texture (Alpha/Opacity),T_,_A,T_Example_A
+Texture (Ambient Occlusion),T_,_AO,T_Example_AO
+Texture (Base Color),T_,_BC,T_Example_BC
+Texture (Displacement),T_,_D,T_Example_D
+Texture (Emissive),T_,_E,T_Example_E
+Texture (Flow Map),T_,_F,T_Example_F
+Texture (Height),T_,_H,T_Example_H
+Texture (Light Map),T_,_L,T_Example_L
+Texture (Mask),T_,_Mask,T_Example_Mask
+Texture (Metallic),T_,_M,T_Example_M
+Texture (Normal),T_,_N,T_Example_N
+Texture (Roughness),T_,_R,T_Example_R
+Texture (Specular),T_,_S,T_Example_S
+Texture Cube,TC_,,TC_Example
+Texture Light Profile,TLP_,,TLP_Example
+Tile Map,TM_,,TM_Example
+Tile Set,TS_,,TS_Example
+Touch Interface Setup,TI_,,TI_Example
+Tutorial Blueprint,TBP_,,TBP_Example
+Vector Curve,Curve_,_Vector,Curve_Example_Vector
+Widget Blueprint,WBP_,,WBP_Example
