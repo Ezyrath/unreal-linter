@@ -50,7 +50,23 @@ fi
 echo "Checking C# formatting..."
 step_failed=0
 if command -v dotnet >/dev/null 2>&1; then
-  if dotnet tool list -g | grep -q dotnet-format; then
+  # Prefer the standalone dotnet-format binary (installed into /usr/share/dotnet/tools and on PATH)
+  if command -v dotnet-format >/dev/null 2>&1; then
+    # Standalone dotnet-format uses --check; older versions may not support --verify-no-changes
+    if dotnet-format --help 2>&1 | grep -q -- '--check'; then
+      dotnet-format --check "$ROOT_DIR" || step_failed=1 || true
+    else
+      # Try the older flag; if it's not supported this will set step_failed
+      dotnet-format --verify-no-changes "$ROOT_DIR" || step_failed=1 || true
+    fi
+    if [ $step_failed -ne 0 ]; then
+      echo "C# formatting issues detected (use dotnet-format or dotnet format)."
+      ANY_STEP_FAILED=1
+    else
+      echo "C# files formatted correctly."
+    fi
+  elif dotnet tool list -g | grep -q dotnet-format; then
+    # Fallback to global tool invocation via 'dotnet format'
     dotnet format "$ROOT_DIR" --verify-no-changes || step_failed=1 || true
     if [ $step_failed -ne 0 ]; then
       echo "C# formatting issues detected (use dotnet format)."
@@ -59,7 +75,7 @@ if command -v dotnet >/dev/null 2>&1; then
       echo "C# files formatted correctly."
     fi
   else
-    echo "dotnet-format not installed as a global tool. Skipping C# auto-check."
+    echo "dotnet-format not available. Skipping C# auto-check."
   fi
 else
   echo "dotnet not available in image. Skipping C# formatting check."
