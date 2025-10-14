@@ -27,6 +27,7 @@ Cube Render Target,RTC_,,RTC_Example
 Curve Atlas,Curve_,_Atlas,Curve_Example_Atlas
 Curve Table,Curve_,_Table,Curve_Example_Table
 Data Asset,DA_,,DA_Weapon_Example
+Data Layer,DL_,,DL_Example
 Data Registry,DR_,,DR_Example
 Data Table,DT_,,DT_Example
 Dataprep Asset,DPA_,,DPA_Example
