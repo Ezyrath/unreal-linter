@@ -118,7 +118,7 @@ if (args.length < 1) {
   console.error('Usage: check_asset_names.js <project_root> [include_dirs] [exclude_dirs]');
   process.exit(2);
 }
-const [root] = args;
+const [rootDir] = args;
 
 // Resolve rules CSV to an absolute path. By default the CSV is expected to live
 // one level above this script (project root): `unreal-asset-name.csv`.
@@ -137,7 +137,7 @@ const excludeArg = args[2] || null;
 const includeDirs = includeArg ? includeArg.split(',').map(s => s.trim()).filter(Boolean) : null;
 const excludeDirs = excludeArg ? excludeArg.split(',').map(s => s.trim()).filter(Boolean) : null;
 
-const assets = findAssets(root, includeDirs, excludeDirs);
+const assets = findAssets(rootDir, includeDirs, excludeDirs);
 const issues = [];
 for (const a of assets) {
   const name = displayName(a);
@@ -149,7 +149,7 @@ for (const a of assets) {
 }
 if (issues.length) {
   console.log('Asset naming issues found:');
-  for (const it of issues) console.log(` - ${it.path} ("${it.name}") does not match any naming rule`);
+  for (const it of issues) console.log(` - ${path.relative(rootDir, it.path)} ("${it.name}") does not match any naming rule`);
   process.exit(1);
 }
 console.log('No asset naming issues found.');
