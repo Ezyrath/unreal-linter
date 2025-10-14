@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_NOLOGO=1
+
 # Environment VAR used:
 # INCLUDE_UNREAL_ASSETS_DIRS: comma-separated list of directories (relative to project root) to include in asset name checks
 # EXCLUDE_UNREAL_ASSETS_DIRS: comma-separated list of directories (relative to project root) to exclude from asset name checks
@@ -51,43 +54,10 @@ echo ""
 echo "Checking C/C++ formatting..."
 LAUNCH_SCRIPT /usr/src/unreal-linter/scripts/check_cc_format.js "$INCLUDE_SOURCE_DIRS" "$EXCLUDE_SOURCE_DIRS"
 
-# 2) C# formatting: use dotnet-format if available
+# 2) C# formatting: use Node script to run `dotnet format whitespace --verify-no-changes --folder --include FILE` per-file
 echo ""
 echo "Checking C# formatting..."
-echo "----------------"
-STEP_FAILED=0
-if command -v dotnet >/dev/null 2>&1; then
-  # Prefer the standalone dotnet-format binary (installed into /usr/share/dotnet/tools and on PATH)
-  if command -v dotnet-format >/dev/null 2>&1; then
-    # Standalone dotnet-format uses --check; older versions may not support --verify-no-changes
-    if dotnet-format --help 2>&1 | grep -q -- '--check'; then
-      dotnet-format --check "$ROOT_DIR" || STEP_FAILED=1 || true
-    else
-      # Try the older flag; if it's not supported this will set STEP_FAILED
-      dotnet-format --verify-no-changes "$ROOT_DIR" || STEP_FAILED=1 || true
-    fi
-    if [ $STEP_FAILED -ne 0 ]; then
-      echo "C# formatting issues detected (use dotnet-format or dotnet format)."
-      ANY_STEP_FAILED=1
-    else
-      echo "C# files formatted correctly."
-    fi
-  elif dotnet tool list -g | grep -q dotnet-format; then
-    # Fallback to global tool invocation via 'dotnet format'
-    dotnet format "$ROOT_DIR" --verify-no-changes || STEP_FAILED=1 || true
-    if [ $STEP_FAILED -ne 0 ]; then
-      echo "C# formatting issues detected (use dotnet format)."
-      ANY_STEP_FAILED=1
-    else
-      echo "C# files formatted correctly."
-    fi
-  else
-    echo "dotnet-format not available. Skipping C# auto-check."
-  fi
-else
-  echo "dotnet not available in image. Skipping C# formatting check."
-fi
-STEP_PASSED_OR_FAILED
+LAUNCH_SCRIPT /usr/src/unreal-linter/scripts/check_cs_format.js "$INCLUDE_SOURCE_DIRS" "$EXCLUDE_SOURCE_DIRS"
 
 # 3) Asset naming checks (expects unreal-asset-name.csv in /usr/src/unreal-linter)
 echo ""
