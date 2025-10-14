@@ -1,0 +1,18 @@
+root = true
+
+[*.{cs,csproj,sln}]
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+
+[*.cs]
+# Use actual tabs for indentation, and treat each tab as 2 columns wide
+indent_style = tab
+indent_size = 2
+tab_width = 2
+
+# Specific override for the single file (optional - repeats above but scoped)
+[Source/UE_eternity/UE_eternity.Build.cs]
+indent_style = tab
+indent_size = 2
+tab_width = 2

@@ -44,6 +44,7 @@ WORKDIR /usr/src/unreal-linter
 COPY unreal-asset-name.csv ./
 COPY scripts/ ./scripts/
 COPY .clang-format ./
+COPY .editorconfig ./
 
 RUN chmod +x scripts/run_checks.sh
 
