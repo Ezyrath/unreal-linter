@@ -10,7 +10,7 @@ export DOTNET_NOLOGO=1
 # INCLUDE_SOURCE_DIRS: comma-separated list of directories (relative to project root) to include in C/C++/C# formatting checks
 # EXCLUDE_SOURCE_DIRS: comma-separated list of directories (relative to project root) to exclude from C/C++/C# formatting checks
 
-ROOT_DIR="/workspace"
+ROOT_DIR="$(pwd)"
 
 # check node is available
 if ! command -v node >/dev/null 2>&1; then

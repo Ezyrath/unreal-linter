@@ -48,4 +48,6 @@ COPY .editorconfig ./
 
 RUN chmod +x scripts/run_checks.sh
 
-ENTRYPOINT ["./scripts/run_checks.sh"]
+WORKDIR /workspace
+
+ENTRYPOINT ["/usr/src/unreal-linter/scripts/run_checks.sh"]
