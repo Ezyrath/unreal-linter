@@ -25,9 +25,9 @@ docker run --rm -v "$(pwd)/MyUnrealProject:/workspace" unreal-linter:fedora
 Including/excluding specific asset directories (recommended via env vars):
 
 ```bash
-docker run --rm -v "$(pwd)/MyUnrealProject:/workspace" \
-  -e INCLUDE_UNREAL_ASSETS_DIRS="Content,Plugins/MyPlugin/Content" \
-  -e EXCLUDE_UNREAL_ASSETS_DIRS="Content/ThirdParty,Content/Temp" \
+docker run --rm -v "$(pwd):/workspace" \
+  -e INCLUDE_UNREAL_ASSETS_DIRS="Content" \
+  -e EXCLUDE_UNREAL_ASSETS_DIRS="Content/_DevImport,Content/__ExternalObjects__,Content/__ExternalActors__" \
   unreal-linter:fedora
 ```
 
