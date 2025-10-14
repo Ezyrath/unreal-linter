@@ -1,26 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Environment VAR used:
+# INCLUDE_UNREAL_ASSETS_DIRS: comma-separated list of directories (relative to project root) to include in asset name checks
+# EXCLUDE_UNREAL_ASSETS_DIRS: comma-separated list of directories (relative to project root) to exclude from asset name checks
+# INCLUDE_SOURCE_DIRS: comma-separated list of directories (relative to project root) to include in C/C++/C# formatting checks
+# EXCLUDE_SOURCE_DIRS: comma-separated list of directories (relative to project root) to exclude from C/C++/C# formatting checks
+
 ROOT_DIR="/workspace"
 
-# Read env vars (preferred) then fallback to positional args
-INCLUDE_DIRS=""
-EXCLUDE_DIRS=""
-if [ -n "${1-}" ]; then
-  ROOT_DIR="$1"
-fi
-
-# Prefer environment variables if set
-if [ -n "${INCLUDE_UNREAL_ASSETS_DIRS-}" ]; then
-  INCLUDE_DIRS="${INCLUDE_UNREAL_ASSETS_DIRS}"
-elif [ -n "${2-}" ]; then
-  INCLUDE_DIRS="$2"
-fi
-
-if [ -n "${EXCLUDE_UNREAL_ASSETS_DIRS-}" ]; then
-  EXCLUDE_DIRS="${EXCLUDE_UNREAL_ASSETS_DIRS}"
-elif [ -n "${3-}" ]; then
-  EXCLUDE_DIRS="$3"
+# check node is available
+if ! command -v node >/dev/null 2>&1; then
+  echo "node not found in PATH. Cannot run checks."
+  exit 1
 fi
 
 echo "Running checks against project at: $ROOT_DIR"
@@ -38,27 +30,26 @@ function STEP_PASSED_OR_FAILED() {
   fi
 }
 
-# 1) C++ formatting: find .cpp .h .hpp .inl
+function LAUNCH_SCRIPT() {
+  local SCRIPT_PATH="$1"
+  local INCLUDE_DIRS="${2:-}"
+  local EXCLUDE_DIRS="${3:-}"
+
+  STEP_FAILED=0
+  echo "----------------"
+  if [ -n "${INCLUDE_DIRS}" ] || [ -n "${EXCLUDE_DIRS}" ]; then
+    echo "Using INCLUDE_DIRS='${INCLUDE_DIRS}' EXCLUDE_DIRS='${EXCLUDE_DIRS}'"
+    node "$SCRIPT_PATH" "$ROOT_DIR" "$INCLUDE_DIRS" "$EXCLUDE_DIRS" || STEP_FAILED=1 || true
+  else
+    node "$SCRIPT_PATH" "$ROOT_DIR" || STEP_FAILED=1 || true
+  fi
+  STEP_PASSED_OR_FAILED
+}
+
+# 1) C++ formatting: use Node script to check clang-format consistency
 echo ""
 echo "Checking C/C++ formatting..."
-echo "----------------"
-# Use a robust null-delimited find to handle filenames with spaces/newlines
-mapfile -t _files_cc < <(find "$ROOT_DIR" -type f \( -name "*.cpp" -o -name "*.cc" -o -name "*.h" -o -name "*.hpp" -o -name "*.inl" \) -print0 | xargs -0 -n1 echo) || true
-if [ ${#_files_cc[@]} -gt 0 ]; then
-  for f in "${_files_cc[@]}"; do
-    # If diff finds differences it exits non-zero; capture that and mark the step as failed
-    clang-format -style=file "$f" | diff -u "$f" - >/dev/null 2>&1 || STEP_FAILED=1 || true
-  done
-  if [ $STEP_FAILED -ne 0 ]; then
-    echo "C/C++ formatting issues detected (use clang-format -i)."
-    ANY_STEP_FAILED=1
-  else
-    echo "C/C++ files formatted correctly."
-  fi
-else
-  echo "No C/C++ source files found."
-fi
-STEP_PASSED_OR_FAILED
+LAUNCH_SCRIPT /usr/src/unreal-linter/scripts/check_cc_format.js "$INCLUDE_SOURCE_DIRS" "$EXCLUDE_SOURCE_DIRS"
 
 # 2) C# formatting: use dotnet-format if available
 echo ""
@@ -101,15 +92,7 @@ STEP_PASSED_OR_FAILED
 # 3) Asset naming checks (expects unreal-asset-name.csv in /usr/src/unreal-linter)
 echo ""
 echo "Checking Unreal asset names..."
-echo "----------------"
-echo "Using include_dirs='$INCLUDE_DIRS' exclude_dirs='$EXCLUDE_DIRS'"
-STEP_FAILED=0
-if [ -n "$INCLUDE_DIRS" ] || [ -n "$EXCLUDE_DIRS" ]; then
-  node /usr/src/unreal-linter/scripts/check_asset_names.js "$ROOT_DIR" /usr/src/unreal-linter/unreal-asset-name.csv "$INCLUDE_DIRS" "$EXCLUDE_DIRS" || STEP_FAILED=1 || true
-else
-  node /usr/src/unreal-linter/scripts/check_asset_names.js "$ROOT_DIR" /usr/src/unreal-linter/unreal-asset-name.csv || STEP_FAILED=1 || true
-fi
-STEP_PASSED_OR_FAILED
+LAUNCH_SCRIPT /usr/src/unreal-linter/scripts/check_asset_names.js "$INCLUDE_UNREAL_ASSETS_DIRS" "$EXCLUDE_UNREAL_ASSETS_DIRS"
 
 echo ""
 echo "CHECKS COMPLETE"
