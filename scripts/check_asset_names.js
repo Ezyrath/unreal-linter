@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+'use strict';
+
+// checks Unreal Engine asset names against naming rules defined in a CSV file
+// Usage: node check_asset_names.js <project_root> [include_dirs] [exclude_dirs]
+
 const fs = require('fs');
 const path = require('path');
 
@@ -107,42 +112,44 @@ function matchesRule(name, rule) {
   return true;
 }
 
-function main() {
-  const args = process.argv.slice(2);
-  if (args.length < 2) {
-    console.error('Usage: check_asset_names.js <project_root> <rules_csv>');
-    process.exit(2);
-  }
-  const [root, csvPath] = args;
-  if (!fs.existsSync(csvPath)) {
-    console.error('Rules CSV not found:', csvPath);
-    process.exit(2);
-  }
-  const rules = loadRules(csvPath);
-
-  // Optional extra args: includeDirs and excludeDirs (comma-separated)
-  // Usage: check_asset_names.js <project_root> <rules_csv> [include_dirs] [exclude_dirs]
-  const includeArg = args[2] || null;
-  const excludeArg = args[3] || null;
-  const includeDirs = includeArg ? includeArg.split(',').map(s => s.trim()).filter(Boolean) : null;
-  const excludeDirs = excludeArg ? excludeArg.split(',').map(s => s.trim()).filter(Boolean) : null;
-
-  const assets = findAssets(root, includeDirs, excludeDirs);
-  const issues = [];
-  for (const a of assets) {
-    const name = displayName(a);
-    let matched = false;
-    for (const r of rules) {
-      if (matchesRule(name, r)) { matched = true; break; }
-    }
-    if (!matched) issues.push({ path: a, name });
-  }
-  if (issues.length) {
-    console.log('Asset naming issues found:');
-    for (const it of issues) console.log(` - ${it.path} ("${it.name}") does not match any naming rule`);
-    process.exit(1);
-  }
-  console.log('No asset naming issues found.');
+// --- MAIN ---
+const args = process.argv.slice(2);
+if (args.length < 1) {
+  console.error('Usage: check_asset_names.js <project_root> [include_dirs] [exclude_dirs]');
+  process.exit(2);
 }
+const [root] = args;
 
-if (require.main === module) main();
+// Resolve rules CSV to an absolute path. By default the CSV is expected to live
+// one level above this script (project root): `unreal-asset-name.csv`.
+// You can change this behavior by editing this script if needed.
+const csvPath = path.resolve('/usr/src/unreal-linter', 'unreal-asset-name.csv');
+if (!fs.existsSync(csvPath)) {
+  console.error('Rules CSV not found at expected path:', csvPath);
+  process.exit(2);
+}
+const rules = loadRules(csvPath);
+
+// Optional extra args: includeDirs and excludeDirs (comma-separated)
+// Usage: check_asset_names.js <project_root> <rules_csv> [include_dirs] [exclude_dirs]
+const includeArg = args[1] || null;
+const excludeArg = args[2] || null;
+const includeDirs = includeArg ? includeArg.split(',').map(s => s.trim()).filter(Boolean) : null;
+const excludeDirs = excludeArg ? excludeArg.split(',').map(s => s.trim()).filter(Boolean) : null;
+
+const assets = findAssets(root, includeDirs, excludeDirs);
+const issues = [];
+for (const a of assets) {
+  const name = displayName(a);
+  let matched = false;
+  for (const r of rules) {
+    if (matchesRule(name, r)) { matched = true; break; }
+  }
+  if (!matched) issues.push({ path: a, name });
+}
+if (issues.length) {
+  console.log('Asset naming issues found:');
+  for (const it of issues) console.log(` - ${it.path} ("${it.name}") does not match any naming rule`);
+  process.exit(1);
+}
+console.log('No asset naming issues found.');
