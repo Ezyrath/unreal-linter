@@ -1,5 +1,5 @@
 ### Builder stage: install .NET SDK and tools
-FROM fedora:40 AS builder
+FROM fedora:latest AS builder
 
 RUN dnf -y install curl tar gzip && dnf clean all
 
@@ -18,7 +18,7 @@ RUN mkdir -p ${DOTNET_INSTALL_DIR}/tools \
 
 
 ### Final stage: runtime image with Node.js, clang and the dotnet runtime/tools copied from builder
-FROM fedora:40
+FROM fedora:latest
 
 # Install runtime packages: Node.js (from Fedora), clang for formatting, git
 RUN dnf -y install \
