@@ -9,6 +9,13 @@ const ASSET_EXTENSIONS = [
   '.wav',
 ];
 
+/**
+ * Load naming rules from a CSV file.
+ * Expected columns: Name, Prefix, Suffix
+ *
+ * @param {string} csvPath - path to the CSV file
+ * @returns {Array<{name: string, prefix: string, suffix: string}>} array of rules
+ */
 function loadRules(csvPath) {
   const text = fs.readFileSync(csvPath, 'utf8');
   const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
@@ -79,10 +86,21 @@ function findAssets(root, includeDirs = null, excludeDirs = null) {
   return assets;
 }
 
+/** Get the display name of an asset file (filename without extension)
+ *
+ * @param {string} filepath - full path to the asset file
+ * @returns {string} display name
+ */
 function displayName(filepath) {
   return path.basename(filepath, path.extname(filepath));
 }
 
+/** Check if a name matches a given rule
+ *
+ * @param {string} name - asset display name
+ * @param {{name: string, prefix: string, suffix: string}} rule - naming rule
+ * @returns {boolean} true if matches
+ */
 function matchesRule(name, rule) {
   if (rule.prefix && !name.startsWith(rule.prefix)) return false;
   if (rule.suffix && !name.endsWith(rule.suffix)) return false;
