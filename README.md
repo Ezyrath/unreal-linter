@@ -6,6 +6,8 @@ Small Docker-based linter that performs:
 - C# formatting checks with `dotnet format` (requires compatible SDK/runtime)
 - Unreal Engine asset file name checks using `unreal-asset-name.csv` rules
 
+> Currently `.clang-format` and `.editorconfig` must be present in the project root. (the files in the repo are examples)
+
 This repository contains a multi-stage `Dockerfile` (Fedora-based) and helper scripts under `scripts/`.
 
 Build the image (from the repo root):
@@ -70,3 +72,6 @@ Notes & behavior
 
 Limitations
 - This tool checks filenames (`.uasset`/`.umap` etc.) — it does not parse asset internals inside Unreal packages.
+
+Sources
+- Unreal asset naming rules are based on [Epic's guidelines](https://dev.epicgames.com/documentation/en-us/unreal-engine/recommended-asset-naming-conventions-in-unreal-engine-projects), [Unreal Directives](https://unrealdirective.com/resources/asset-naming-conventions) and personal experience.
