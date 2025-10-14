@@ -11,7 +11,7 @@ This repository contains a multi-stage `Dockerfile` (Fedora-based) and helper sc
 Build the image (from the repo root):
 
 ```bash
-docker build -t unreal-linter:fedora .
+docker build -t unreal-linter:latest .
 ```
 
 Run the linter against a local Unreal project (mount project to `/workspace`):
@@ -19,30 +19,54 @@ Run the linter against a local Unreal project (mount project to `/workspace`):
 Basic (defaults):
 
 ```bash
-docker run --rm -v "$(pwd)/MyUnrealProject:/workspace" unreal-linter:fedora
+docker run --rm -v "$(pwd):/workspace" unreal-linter:latest
 ```
 
 Including/excluding specific asset directories / source directories (recommended via env vars):
 
-```bash
+```
 docker run --rm -v "$(pwd):/workspace" \
   -e INCLUDE_SOURCE_DIRS="Source" \
   -e EXCLUDE_SOURCE_DIRS="" \
   -e INCLUDE_UNREAL_ASSETS_DIRS="Content" \
   -e EXCLUDE_UNREAL_ASSETS_DIRS="Content/_DevImport,Content/__ExternalObjects__,Content/__ExternalActors__" \
-  unreal-linter:fedora
+  unreal-linter:latest
+```
+Output example (with some intentional failures):
+
+```txt
+Running checks against project at: /workspace
+
+Checking C/C++ formatting...
+----------------
+Using INCLUDE_DIRS='Source' EXCLUDE_DIRS=''
+C/C++ files formatted correctly.
+--- [PASSED] ---
+
+Checking C# formatting...
+----------------
+Using INCLUDE_DIRS='Source' EXCLUDE_DIRS=''
+C# files formatted correctly.
+--- [PASSED] ---
+
+Checking Unreal asset names...
+----------------
+Using INCLUDE_DIRS='Content' EXCLUDE_DIRS='Content/_DevImport,Content/__ExternalObjects__,Content/__ExternalActors__'
+Asset naming issues found:
+ - Content/Levels/Example.uasset ("Example") does not match any naming rule
+ - Content/Inputs/NULL_Character.uasset ("NULL_Character") does not match any naming rule
+--- [FAILED] ---
+
+CHECKS COMPLETE
+
+--- RESULTS ---
+One or more checks failed. Exiting with non-zero status.
 ```
 
 Notes & behavior
 - The asset name checker scans for asset extensions defined in `scripts/check_asset_names.js` (default includes `.uasset`, `.umap`, etc.). You can adjust that list in the script.
-- `run_checks.sh` prefers `INCLUDE_UNREAL_ASSETS_DIRS` / `EXCLUDE_UNREAL_ASSETS_DIRS` environment variables when set; otherwise it falls back to positional args 2/3.
 - C/C++ formatting: compares files with `clang-format -style=file` and reports differences; does not auto-fix unless you modify the script to run `clang-format -i`.
-- C#: `dotnet-format` is installed in the image but the project's SDK version must be compatible with .NET SDK 7 installed in the container.
+- C#: `dotnet` is installed in the image but the project's SDK version must be compatible with .NET SDK 7 installed in the container.
 
 Limitations
-- This tool checks filenames (`.uasset`/`.umap` etc.) — it does not parse asset internals inside Unreal packages. For deeper checks you'd export metadata from Unreal Editor or use editor commandlets.
-
-Extending
-- Make the asset extension list configurable (env or config file).
-- Add a `--fix` flag to `run_checks.sh` to apply `clang-format -i` automatically.
-- Add named CLI flags (`--include`, `--exclude`) if you prefer explicit options over env vars.
+- This tool checks filenames (`.uasset`/`.umap` etc.) — it does not parse asset internals inside Unreal packages.
