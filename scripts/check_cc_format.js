@@ -122,7 +122,7 @@ if (!files.length) {
 const mismatches = [];
 for (const f of files) {
   // run clang-format -style=file on the file and compare to the file contents
-  console.log('Checking C++ formatting for:', path.relative(rootDir, f));
+  //console.log('Checking C++ formatting for:', path.relative(rootDir, f));
   const cf = spawnSync('clang-format', ['-style=file', f], { encoding: 'utf8' });
   if (cf.status !== 0) {
     console.error(`clang-format failed on ${f}`);

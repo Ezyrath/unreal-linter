@@ -70,7 +70,7 @@ for (const inc of resolvedIncludes) {
     if (seen.has(file)) continue;
     seen.add(file);
 
-    console.log('Checking C# formatting for:', path.relative(rootDir, file));
+    //console.log('Checking C# formatting for:', path.relative(rootDir, file));
 
     const args = ['format', 'whitespace', '--verify-no-changes', '--folder', '--include', file];
     const r = spawnSync('dotnet', args, { stdio: 'pipe', cwd: rootDir, encoding: 'utf8' });
