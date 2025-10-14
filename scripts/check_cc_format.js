@@ -13,15 +13,30 @@ const root = process.argv[2] ? resolve(process.argv[2]) : process.cwd();
 const includeArg = process.argv[3] || '';
 const excludeArg = process.argv[4] || '';
 
+/**
+ * Parse a comma-separated list of directories.
+ * @param {string} arg - the input string
+ * @returns {string[]} array of directory paths
+ */
 function parseDirList(arg) {
   if (!arg) return [];
   return arg.split(',').map(s => s.trim()).filter(Boolean);
 }
 
+/** 
+ * Resolve a list of directories relative to the root.
+ * @param {string[]} dirList - array of directory paths
+ * @returns {string[]} array of resolved directory paths
+ */
 function resolveDirs(dirList) {
   return dirList.map(d => resolve(root, d));
 }
 
+/**
+ * Recursively find C/C++ source files in a directory.
+ * @param {string} dir - the directory to search
+ * @returns {string[]} array of file paths
+ */
 function findFiles(dir) {
   const exts = ['.cpp', '.cc', '.c', '.h', '.hpp', '.inl'];
   const results = [];
@@ -48,6 +63,10 @@ function findFiles(dir) {
   return results;
 }
 
+/**
+ * Check if clang-format is available in PATH.
+ * @returns {boolean} true if clang-format is available in PATH
+ */
 function checkClangFormatAvailable() {
   const which = spawnSync('clang-format', ['--version'], { encoding: 'utf8' });
   return which.status === 0;
