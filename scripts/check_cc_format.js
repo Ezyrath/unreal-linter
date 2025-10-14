@@ -5,10 +5,10 @@
 // Usage: node check_cc_format.js [rootDir]
 
 const { spawnSync } = require('child_process');
-const { resolve } = require('path');
+const path = require('path');
 const fs = require('fs');
 
-const root = process.argv[2] ? resolve(process.argv[2]) : process.cwd();
+const rootDir = process.argv[2] ? path.resolve(process.argv[2]) : process.cwd();
 // Optional include/exclude args (comma-separated list of directories relative to project root)
 const includeArg = process.argv[3] || '';
 const excludeArg = process.argv[4] || '';
@@ -29,7 +29,7 @@ function parseDirList(arg) {
  * @returns {string[]} array of resolved directory paths
  */
 function resolveDirs(dirList) {
-  return dirList.map(d => resolve(root, d));
+  return dirList.map(d => path.resolve(rootDir, d));
 }
 
 /**
@@ -48,7 +48,7 @@ function findFiles(dir) {
       return;
     }
     for (const ent of entries) {
-      const p = resolve(d, ent.name);
+      const p = path.resolve(d, ent.name);
       if (ent.isDirectory()) {
         // skip node_modules and .git for speed
         if (ent.name === 'node_modules' || ent.name === '.git') continue;
@@ -100,7 +100,7 @@ if (includeDirs.length) {
   // dedupe
   files = Array.from(new Set(files));
 } else {
-  files = findFiles(root);
+  files = findFiles(rootDir);
 }
 
 // Apply exclude filtering
@@ -122,6 +122,7 @@ if (!files.length) {
 const mismatches = [];
 for (const f of files) {
   // run clang-format -style=file on the file and compare to the file contents
+  console.log('Checking C++ formatting for:', path.relative(rootDir, f));
   const cf = spawnSync('clang-format', ['-style=file', f], { encoding: 'utf8' });
   if (cf.status !== 0) {
     console.error(`clang-format failed on ${f}`);
@@ -144,7 +145,7 @@ for (const f of files) {
 if (mismatches.length) {
   console.log('C/C++ formatting issues detected (use clang-format -i).');
   for (const m of mismatches) {
-    console.log(` - ${m.file}${m.reason ? ' (' + m.reason + ')' : ''}`);
+    console.log(` - ${path.relative(rootDir, m.file)}${m.reason ? ' (' + m.reason + ')' : ''}`);
   }
   process.exit(1);
 } else {
