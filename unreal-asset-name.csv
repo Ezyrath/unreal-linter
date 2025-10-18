@@ -5,7 +5,9 @@ Aim Offset,AO_,,AO_Example
 Aim Offset 1D,AO_,,AO_Example
 Animated Vector Field,VFA_,,VFA_Example
 Animation Blueprint,ABP_,,ABP_Example
+Animation Blueprint Template,ABT_,,ABT_Example
 Animation Composite,AC_,,AC_Example
+Animation Layer Interface,ALI_,,ALI_Example
 Animation Montage,AM_,,AM_Example
 Animation Notify,AN_,,AN_Example
 Animation Sequence,AS_,,AS_Example
