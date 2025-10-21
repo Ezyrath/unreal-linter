@@ -25,6 +25,7 @@ Blueprint Macro Library,BPML_,,BPML_Example
 Camera Anim,CA_,,CA_Example
 Chooser Table,CHT_,,CHT_Example
 Color Curve,Curve_,_Color,Curve_Example_Color
+Control Rig,CR_,,CR_Example
 Cube Render Target,RTC_,,RTC_Example
 Curve Atlas,Curve_,_Atlas,Curve_Example_Atlas
 Curve Table,Curve_,_Table,Curve_Example_Table
